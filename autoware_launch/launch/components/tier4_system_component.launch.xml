@@ -1,55 +1,66 @@
 <?xml version="1.0"?>
 <launch>
   <arg name="is_redundant" default="false"/>
+  <arg name="is_multi_domain" default="false"/>
   <arg name="use_control_command_gate" default="false"/>
 
   <let
     name="diagnostic_graph_aggregator_param_path"
     value="$(find-pkg-share autoware_launch)/config/system/diagnostic_graph_aggregator/diagnostic_graph_aggregator.redundancy.main.param.yaml"
-    if="$(var is_redundant)"
+    if="$(var is_multi_domain)"
   />
   <let
     name="diagnostic_graph_aggregator_param_path"
     value="$(find-pkg-share autoware_launch)/config/system/diagnostic_graph_aggregator/diagnostic_graph_aggregator.param.yaml"
-    unless="$(var is_redundant)"
+    unless="$(var is_multi_domain)"
   />
-  <let name="diagnostic_graph_aggregator_graph_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/autoware-main.redundancy.main.yaml" if="$(var is_redundant)"/>
-  <let name="diagnostic_graph_aggregator_graph_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/autoware-main.yaml" unless="$(var is_redundant)"/>
+  <let name="diagnostic_graph_aggregator_graph_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/autoware-main.redundancy.main.yaml" if="$(var is_multi_domain)"/>
+  <let name="diagnostic_graph_aggregator_graph_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/autoware-main.yaml" unless="$(var is_multi_domain)"/>
 
-  <let name="dummy_diag_publisher_param_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/dummy_diag_publisher.redundancy.main.param.yaml" if="$(var is_redundant)"/>
-  <let name="dummy_diag_publisher_param_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/dummy_diag_publisher.param.yaml" unless="$(var is_redundant)"/>
+  <let name="dummy_diag_publisher_param_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/dummy_diag_publisher.redundancy.main.param.yaml" if="$(var is_multi_domain)"/>
+  <let name="dummy_diag_publisher_param_path" value="$(find-pkg-share autoware_launch)/config/system/tier4_diagnostics/dummy_diag_publisher.param.yaml" unless="$(var is_multi_domain)"/>
 
-  <let name="change_operation_mode_srv" value="/main/system/operation_mode/change_operation_mode" if="$(var is_redundant)"/>
-  <let name="change_operation_mode_srv" value="/system/operation_mode/change_operation_mode" unless="$(var is_redundant)"/>
-  <let name="change_autoware_control_srv" value="/main/system/operation_mode/change_autoware_control" if="$(var is_redundant)"/>
-  <let name="change_autoware_control_srv" value="/system/operation_mode/change_autoware_control" unless="$(var is_redundant)"/>
+  <let name="change_operation_mode_srv" value="/main/system/operation_mode/change_operation_mode" if="$(var is_multi_domain)"/>
+  <let name="change_operation_mode_srv" value="/system/operation_mode/change_operation_mode" unless="$(var is_multi_domain)"/>
+  <let name="change_autoware_control_srv" value="/main/system/operation_mode/change_autoware_control" if="$(var is_multi_domain)"/>
+  <let name="change_autoware_control_srv" value="/system/operation_mode/change_autoware_control" unless="$(var is_multi_domain)"/>
 
   <let name="command_mode_switcher_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/switcher.redundancy.main.param.yaml" if="$(var is_redundant)"/>
-  <let name="command_mode_switcher_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/switcher.param.yaml" unless="$(var is_redundant)"/>
+  <group scoped="false" unless="$(var is_redundant)">
+    <let name="command_mode_switcher_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/switcher.single_ecu.main.param.yaml" if="$(var is_multi_domain)"/>
+    <let name="command_mode_switcher_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/switcher.param.yaml" unless="$(var is_multi_domain)"/>
+  </group>
+
   <group scoped="false" if="$(eval &quot;'$(var system_run_mode)'=='planning_simulation'&quot;)">
     <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.redundancy.psim.param.yaml" if="$(var is_redundant)"/>
-    <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.param.yaml" unless="$(var is_redundant)"/>
+    <group scoped="false" unless="$(var is_redundant)">
+      <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.single_ecu.psim.param.yaml" if="$(var is_multi_domain)"/>
+      <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.param.yaml" unless="$(var is_multi_domain)"/>
+    </group>
   </group>
   <group scoped="false" unless="$(eval &quot;'$(var system_run_mode)'=='planning_simulation'&quot;)">
     <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.redundancy.param.yaml" if="$(var is_redundant)"/>
-    <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.param.yaml" unless="$(var is_redundant)"/>
+    <group scoped="false" unless="$(var is_redundant)">
+      <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.single_ecu.param.yaml" if="$(var is_multi_domain)"/>
+      <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.param.yaml" unless="$(var is_multi_domain)"/>
+    </group>
   </group>
-  <let name="command_mode_decider_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/decider.param.yaml" unless="$(var is_redundant)"/>
-  <let name="availability_converter_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/converter.redundancy.param.yaml" if="$(var is_redundant)"/>
-  <let name="availability_converter_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/converter.param.yaml" unless="$(var is_redundant)"/>
 
-  <let name="change_autoware_control_srv" value="/main/system/operation_mode/change_autoware_control" if="$(var is_redundant)"/>
-  <let name="change_autoware_control_srv" value="/system/operation_mode/change_autoware_control" unless="$(var is_redundant)"/>
+  <let name="availability_converter_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/converter.redundancy.param.yaml" if="$(var is_multi_domain)"/>
+  <let name="availability_converter_param_path" value="$(find-pkg-share autoware_launch)/config/system/command_mode/converter.param.yaml" unless="$(var is_multi_domain)"/>
 
-  <let name="mrm_state_topic" value="/in_main/system/fail_safe/mrm_state" if="$(var is_redundant)"/>
-  <let name="mrm_state_topic" value="/system/fail_safe/mrm_state" unless="$(var is_redundant)"/>
+  <let name="change_autoware_control_srv" value="/main/system/operation_mode/change_autoware_control" if="$(var is_multi_domain)"/>
+  <let name="change_autoware_control_srv" value="/system/operation_mode/change_autoware_control" unless="$(var is_multi_domain)"/>
 
-  <let name="diag_struct_topic" value="/in_main/diagnostics_graph/struct" if="$(var is_redundant)"/>
-  <let name="diag_struct_topic" value="/diagnostics_graph/struct" unless="$(var is_redundant)"/>
-  <let name="diag_status_topic" value="/in_main/diagnostics_graph/status" if="$(var is_redundant)"/>
-  <let name="diag_status_topic" value="/diagnostics_graph/status" unless="$(var is_redundant)"/>
-  <let name="diag_reset_srv" value="/main/diagnostics_graph/reset" if="$(var is_redundant)"/>
-  <let name="diag_reset_srv" value="/diagnostics_graph/reset" unless="$(var is_redundant)"/>
+  <let name="mrm_state_topic" value="/in_main/system/fail_safe/mrm_state" if="$(var is_multi_domain)"/>
+  <let name="mrm_state_topic" value="/system/fail_safe/mrm_state" unless="$(var is_multi_domain)"/>
+
+  <let name="diag_struct_topic" value="/in_main/diagnostics_graph/struct" if="$(var is_multi_domain)"/>
+  <let name="diag_struct_topic" value="/diagnostics_graph/struct" unless="$(var is_multi_domain)"/>
+  <let name="diag_status_topic" value="/in_main/diagnostics_graph/status" if="$(var is_multi_domain)"/>
+  <let name="diag_status_topic" value="/diagnostics_graph/status" unless="$(var is_multi_domain)"/>
+  <let name="diag_reset_srv" value="/main/diagnostics_graph/reset" if="$(var is_multi_domain)"/>
+  <let name="diag_reset_srv" value="/diagnostics_graph/reset" unless="$(var is_multi_domain)"/>
 
   <include file="$(find-pkg-share tier4_system_launch)/launch/system.launch.xml">
     <arg name="run_mode" value="$(var system_run_mode)"/>
