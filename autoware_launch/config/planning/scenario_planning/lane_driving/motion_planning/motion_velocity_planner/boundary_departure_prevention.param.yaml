@@ -102,7 +102,7 @@
           th_dist_to_boundary_m:
             left:
               min: 0.01
-              max: 0.5
+              max: 0.4
             right:
               min: 0.01
-              max: 0.5
+              max: 0.4
