@@ -40,13 +40,13 @@ units:
     list:
       - { type: link, link: /perception/001-topic_status/traffic_signals-error }
       - { type: link, link: /perception/009-spec_limit/voxel_based_compare_map_filter-error }
-
-  - path: /perception/in_lane_moderate_stop
-    type: and
-    list:
       - { type: link, link: /perception/001-topic_status/objects-error }
       - { type: link, link: /perception/001-topic_status/pointcloud-error }
       - { type: link, link: /perception/topic_state_monitor/perception_ecu-error }
+
+  - path: /perception/in_lane_moderate_stop
+    type: and
+    # list:
 
   - path: /perception/in_lane_emergency_stop
     type: and

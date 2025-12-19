@@ -37,11 +37,7 @@ units:
 
   - path: /planning/comfortable_stop
     type: and
-
-  - path: /planning/in_lane_moderate_stop
-    type: and
     list:
-      - { type: link, link: /planning/001-topic_status/route-error }
       - { type: link, link: /planning/003-trajectory_finite_validation-error }
       - { type: link, link: /planning/004-trajectory_interval_validation-error }
       - { type: link, link: /planning/005-trajectory_curvature_validation-error }
@@ -52,15 +48,20 @@ units:
       - { type: link, link: /planning/010-trajectory_steering_validation-error }
       - { type: link, link: /planning/011-trajectory_steering_rate_validation-error }
       - { type: link, link: /planning/012-trajectory_velocity_deviation_validation-error }
+
+  - path: /planning/in_lane_moderate_stop
+    type: and
+    list:
+      - { type: link, link: /planning/001-topic_status/route-error }
       - { type: link, link: /planning/013-trajectory_shift_validation-error }
       - { type: link, link: /planning/014-trajectory_validation_yaw_deviation-error }
       - { type: link, link: /planning/017-trajectory_distance_deviation_validation-error }
+      - { type: link, link: /planning/020-boundary_departure-error }
+      - { type: link, link: /planning/016-trajectory_validation_distance_deviation-error }
 
   - path: /planning/in_lane_emergency_stop
     type: and
-    list:
-      - { type: link, link: /planning/020-boundary_departure-error }
-      - { type: link, link: /planning/016-trajectory_validation_distance_deviation-error }
+    # list:
 
   - path: /planning/sub_ecu_in_lane_moderate_stop
     type: and

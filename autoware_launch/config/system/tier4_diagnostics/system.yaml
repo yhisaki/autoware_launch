@@ -45,12 +45,12 @@ units:
       - { type: link, link: /system/019-event_record_status-error }
       - { type: link, link: /system/020-mrm-request-error }
       # - { type: link, link: /system/clock-error }
+      - { type: link, link: /system/015-velocity-status-error }
+      - { type: link, link: /system/016-steering-status-error }
 
   - path: /system/in_lane_moderate_stop
     type: and
-    list:
-      - { type: link, link: /system/015-velocity-status-error }
-      - { type: link, link: /system/016-steering-status-error }
+    # list:
 
   - path: /system/in_lane_emergency_stop
     type: and

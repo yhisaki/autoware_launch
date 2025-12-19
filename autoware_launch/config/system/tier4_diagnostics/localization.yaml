@@ -40,22 +40,22 @@ units:
     list:
       - { type: link, link: /localization/004-map-update-error }
       - { type: link, link: /localization/007-pose_instability_detector-error }
-
-  - path: /localization/in_lane_moderate_stop
-    type: and
-    list:
       - { type: link, link: /localization/001-topic_status/pose_twist_fusion_filter-error }
       - { type: link, link: /localization/001-topic_status/tf-error }
       - { type: link, link: /localization/005-accuracy-error }
       - { type: link, link: /localization/006-ekf_localizer-error }
+      - { type: link, link: /localization/002-timeout/gyro_odometer }
+
+  - path: /localization/in_lane_moderate_stop
+    type: and
+    # list:
 
   - path: /localization/in_lane_emergency_stop
     type: and
 
   - path: /localization/sub_ecu_in_lane_moderate_stop
     type: and
-    list:
-      - { type: link, link: /localization/002-timeout/gyro_odometer }
+    # list:
 
   - path: /localization/none
     type: and

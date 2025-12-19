@@ -37,7 +37,25 @@ units:
 
   - path: /hardware/sub_ecu_in_lane_moderate_stop
     type: and
+    # list:
+
+  - path: /hardware/in_lane_emergency_stop
+    type: and
+
+  - path: /hardware/in_lane_moderate_stop
+    type: and
+
+  - path: /hardware/comfortable_stop
+    type: and
     list:
+      # Main ECU
+      - { type: link, link: /hardware/mot/001-connection }
+      - { type: link, link: /hardware/signage/001-connection }
+      - { type: link, link: /hardware/voice/001-connection }
+      # Sub ECU - reserve
+      # Perception1 ECU - reserve
+      # Perception2 ECU - reserve
+
       # Main ECU
       - { type: link, link: /hardware/cpu/001-temperature-error }
       - { type: link, link: /hardware/cpu/002-usage-error }
@@ -86,23 +104,6 @@ units:
       # - { type: link, link: /hardware/perception2/network/003-crc-error }
       # - { type: link, link: /hardware/perception2/network/004-packet_reassembles-error }
       - { type: link, link: /hardware/perception2/gpu/001-temperature-error }
-
-  - path: /hardware/in_lane_emergency_stop
-    type: and
-
-  - path: /hardware/in_lane_moderate_stop
-    type: and
-
-  - path: /hardware/comfortable_stop
-    type: and
-    list:
-      # Main ECU
-      - { type: link, link: /hardware/mot/001-connection }
-      - { type: link, link: /hardware/signage/001-connection }
-      - { type: link, link: /hardware/voice/001-connection }
-      # Sub ECU - reserve
-      # Perception1 ECU - reserve
-      # Perception2 ECU - reserve
 
   - path: /hardware/none
     type: and
