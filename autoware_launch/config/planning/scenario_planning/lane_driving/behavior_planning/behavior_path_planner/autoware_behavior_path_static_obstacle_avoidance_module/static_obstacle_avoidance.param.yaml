@@ -324,8 +324,8 @@
         longitudinal:
           nominal_deceleration: -1.5                    # [m/ss]
           nominal_jerk: 0.6                             # [m/sss]
-          max_deceleration: -4.0                        # [m/ss]
-          max_jerk: 5.0                                 # [m/sss]
+          max_deceleration: -2.5                        # [m/ss]
+          max_jerk: 2.0                                 # [m/sss]
           max_acceleration: 0.3                         # [m/ss]
           min_velocity_to_limit_max_acceleration: 2.78  # [m/ss]
 
