@@ -57,6 +57,9 @@ units:
       - { type: link, link: /foolproof/perception1/mgbe1_not_ready-error }
       - { type: link, link: /foolproof/perception2/mgbe1_not_ready-error }
       - { type: link, link: /foolproof/addon/heartbeat }
+      - { type: link, link: /foolproof/main/update_status_ota }
+      - { type: link, link: /foolproof/main/update_status_map }
+      - { type: link, link: /foolproof/main/update_status_unrecoverable }
 
   - path: /foolproof/sub_ecu_in_lane_moderate_stop
     type: and
@@ -222,3 +225,24 @@ units:
     node: autoware_diagnostics_bridge_node_main
     name: main_scheduling_settings_autoware
     timeout: 3.0
+
+  - path: /foolproof/main/update_status_ota
+    type: diag
+    node: autoware_diagnostics_bridge_node_main
+    name: main_update_status_checker_ota
+    timeout: 3.0
+    latch: 0.0
+
+  - path: /foolproof/main/update_status_map
+    type: diag
+    node: autoware_diagnostics_bridge_node_main
+    name: main_update_status_checker_map
+    timeout: 3.0
+    latch: 0.0
+
+  - path: /foolproof/main/update_status_unrecoverable
+    type: diag
+    node: autoware_diagnostics_bridge_node_main
+    name: main_update_status_checker_unrecoverable
+    timeout: 3.0
+    latch: 0.0
