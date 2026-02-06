@@ -57,7 +57,7 @@
   <arg name="enable_scheduling_settings" default="false" description="enable scheduling settings"/>
 
   <!-- Perception Filter Options -->
-  <arg name="launch_perception_filter" default="false" description="launch perception filter for external approval"/>
+  <arg name="launch_perception_filter" default="true" description="launch perception filter for external approval"/>
 
   <group scoped="false">
     <!-- Vehicle -->
