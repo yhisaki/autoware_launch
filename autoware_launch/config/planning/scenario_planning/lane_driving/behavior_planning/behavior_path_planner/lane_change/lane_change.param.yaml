@@ -21,8 +21,8 @@
       trajectory:
         max_prepare_duration: 3.0
         min_prepare_duration: 1.0
-        lateral_jerk: 0.3
-        min_longitudinal_acc: -0.5
+        lateral_jerk: 0.5
+        min_longitudinal_acc: -1.0
         max_longitudinal_acc: 0.2
         th_prepare_length_diff: 1.0
         th_lane_changing_length_diff: 1.0
@@ -55,8 +55,8 @@
         prepare:                                        # RSS parameters used during the prepare phase, regardless of whether the ego is searching for a safe path, canceling, or transitioning to another state.
           expected_front_deceleration: -1.0             # [m/s2]
           expected_rear_deceleration: -1.0              # [m/s2]
-          rear_vehicle_reaction_time: 2.0               # [s]
-          rear_vehicle_safety_time_margin: 1.0          # [s]
+          rear_vehicle_reaction_time: 1.0               # [s]
+          rear_vehicle_safety_time_margin: 0.8          # [s]
           lateral_distance_max_threshold: 2.0           # [m]
           longitudinal_distance_min_threshold: 2.0      # [m]
           longitudinal_velocity_delta_time: 0.0         # [s]
@@ -64,10 +64,10 @@
         execution:
           expected_front_deceleration: -1.5
           expected_rear_deceleration: -1.5
-          rear_vehicle_reaction_time: 2.0
-          rear_vehicle_safety_time_margin: 1.0
-          lateral_distance_max_threshold: 2.0
-          longitudinal_distance_min_threshold: 3.0
+          rear_vehicle_reaction_time: 1.0
+          rear_vehicle_safety_time_margin: 0.8
+          lateral_distance_max_threshold: 1.0
+          longitudinal_distance_min_threshold: 2.0
           longitudinal_velocity_delta_time: 0.0
           extended_polygon_policy: "rectangle"
         parked:
