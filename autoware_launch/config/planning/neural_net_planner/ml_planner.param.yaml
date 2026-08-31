@@ -28,10 +28,10 @@
       max_sqp_iterations: 100
     road_border_avoidance:
       enable: true
-      footprint_margin_m: 0.1     # ego footprint inflation for the overlap check [m]
+      footprint_margin_m: 0.3     # ego footprint inflation for the overlap check [m]
       search_radius_m: 120.0      # road borders farther than this from ego are ignored [m]
       shift_step_m: 0.05           # lateral shift resolution [m]
-      max_lateral_shift_m: 1.5    # cap on the total lateral offset from the raw position [m]
+      max_lateral_shift_m: 0.5    # cap on the total lateral offset from the raw position [m]
       propagate_shift: true       # carry the offset over to all subsequent points
     stop_point_fixing:
       enable: true
