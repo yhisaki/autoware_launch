@@ -10,7 +10,7 @@
   <!-- Input topic parameters for planning modules -->
   <arg name="planning_input_objects_topic_name" default="/perception/object_recognition/objects"/>
   <arg name="planning_input_pointcloud_topic_name" default="/perception/obstacle_segmentation/pointcloud"/>
-  <arg name="planning_setting" default="rule_based" description="planning setting diffusion_planner / rule_based"/>
+  <arg name="planning_setting" default="rule_based" description="planning setting diffusion_planner / ml_planner / rule_based"/>
 
   <!-- Global parameters -->
   <group scoped="false">
@@ -22,10 +22,14 @@
 
   <arg name="is_60kph" default="false"/>
 
-  <group if="$(eval &quot;'$(var planning_setting)'=='diffusion_planner'&quot;)">
+  <group if="$(eval &quot;'$(var planning_setting)' in ['diffusion_planner', 'ml_planner']&quot;)">
     <let name="neural_net_planner_config_path" value="$(find-pkg-share autoware_launch)/config/planning/neural_net_planner"/>
     <let name="optimizer_plugins_config_path" value="$(var neural_net_planner_config_path)/trajectory_optimizer_plugins"/>
+    <let name="planner_param_path" value="$(var neural_net_planner_config_path)/diffusion_planner.param.yaml" if="$(eval &quot;'$(var planning_setting)'=='diffusion_planner'&quot;)"/>
+    <let name="planner_param_path" value="$(var neural_net_planner_config_path)/ml_planner.param.yaml" if="$(eval &quot;'$(var planning_setting)'=='ml_planner'&quot;)"/>
     <include file="$(find-pkg-share autoware_launch)/launch/e2e_components/diffusion_planner.launch.xml">
+      <arg name="planner_type" value="$(var planning_setting)"/>
+      <arg name="planner_param_path" value="$(var planner_param_path)"/>
       <arg name="vehicle_param_file" value="$(find-pkg-share $(var vehicle_model)_description)/config/vehicle_info.param.yaml"/>
       <arg name="vehicle_model" value="$(var vehicle_model)"/>
       <arg name="pointcloud_container_name" value="$(var pointcloud_container_name)"/>
@@ -43,7 +47,6 @@
       <arg name="mission_planner_param_path" value="$(find-pkg-share autoware_launch)/config/planning/mission_planning/mission_planner/mission_planner.param.yaml"/>
 
       <!-- trajectory generator params -->
-      <arg name="diffusion_planner_param_path" value="$(var neural_net_planner_config_path)/diffusion_planner.param.yaml"/>
       <arg name="trajectory_processor_param_path" value="$(var neural_net_planner_config_path)/trajectory_processor.param.yaml"/>
       <arg name="jerk_filtered_smoother_param_path" value="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/autoware_velocity_smoother/JerkFiltered.param.yaml"/>
       <arg name="velocity_smoother_param_path" value="$(find-pkg-share autoware_launch)/config/planning/scenario_planning/common/autoware_velocity_smoother/velocity_smoother.param.yaml"/>
@@ -65,6 +68,7 @@
       <arg name="trajectory_ranker_param_path" value="$(var neural_net_planner_config_path)/trajectory_selector/ranker.param.yaml"/>
     </include>
   </group>
+
 
   <group if="$(eval &quot;'$(var planning_setting)'=='rule_based'&quot;)">
     <include file="$(find-pkg-share autoware_launch)/config/planning/preset/$(var module_preset)_preset.yaml"/>
