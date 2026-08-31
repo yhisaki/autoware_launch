@@ -1,8 +1,9 @@
 <launch>
   <!-- planning module -->
-  <!-- diffusion planner -->
+  <!-- neural network based planner -->
   <arg name="vehicle_model" default="sample_vehicle"/>
-  <arg name="diffusion_planner_param_path"/>
+  <arg name="planner_type" default="diffusion_planner" description="diffusion_planner / ml_planner"/>
+  <arg name="planner_param_path"/>
   <arg name="vehicle_param_file"/>
   <arg name="diffusion_planner_vehicle_info_param_path" default="$(find-pkg-share autoware_launch)/config/planning/neural_net_planner/diffusion_planner_vehicle_info.param.yaml"/>
 
@@ -54,6 +55,8 @@
   <let name="diffusion_optimizer_output_topic" value="/planning/generator/diffusion_planner/optimized_candidate_trajectories" if="$(var enable_diffusion_planner_dummy_gate)"/>
   <let name="minimum_rule_based_planner_output_topic" value="/planning/generator/minimum_rule_based/candidate_trajectories" unless="$(var minimum_rule_based_planner_shadow_mode)"/>
   <let name="minimum_rule_based_planner_output_topic" value="/planning/generator/minimum_rule_based/shadow_candidate_trajectories" if="$(var minimum_rule_based_planner_shadow_mode)"/>
+  <let name="planner_node_name" value="diffusion_planner_node" if="$(eval &quot;'$(var planner_type)'=='diffusion_planner'&quot;)"/>
+  <let name="planner_node_name" value="ml_planner_node" if="$(eval &quot;'$(var planner_type)'=='ml_planner'&quot;)"/>
 
   <node pkg="demo_nodes_cpp" exec="parameter_blackboard" name="velocity_smoother" namespace="/planning/scenario_planning" output="screen">
     <param name="max_velocity" value="16.6"/>
@@ -83,20 +86,39 @@
         <!-- neural network based planning module -->
         <group unless="$(var disable_diffusion_planner_node)">
           <push-ros-namespace namespace="neural_network_based_planner"/>
-          <include file="$(find-pkg-share autoware_diffusion_planner)/launch/diffusion_planner.launch.xml">
-            <arg name="vehicle_model" value="$(var vehicle_model)"/>
-            <arg name="diffusion_planner_param_path" value="$(var diffusion_planner_param_path)"/>
-            <arg name="vehicle_info_param_path" value="$(var diffusion_planner_vehicle_info_param_path)"/>
-            <arg name="input_odometry" value="/localization/kinematic_state"/>
-            <arg name="input_acceleration" value="/localization/acceleration"/>
-            <arg name="input_route" value="/planning/mission_planning/route"/>
-            <arg name="input_traffic_signals" value="/perception/traffic_light_recognition/traffic_signals"/>
-            <arg name="input_tracked_objects" value="/perception/object_recognition/tracking/objects"/>
-            <arg name="input_vector_map" value="/map/vector_map"/>
-            <arg name="input_turn_indicators" value="/vehicle/status/turn_indicators_status"/>
-            <arg name="debug/output_traffic_signal" value="/planning/scenario_planning/lane_driving/behavior_planning/debug/traffic_signal"/>
-            <arg name="output_trajectories" value="$(var diffusion_candidate_trajectories_topic)"/>
-          </include>
+          <group if="$(eval &quot;'$(var planner_type)'=='diffusion_planner'&quot;)">
+            <include file="$(find-pkg-share autoware_diffusion_planner)/launch/diffusion_planner.launch.xml">
+              <arg name="vehicle_model" value="$(var vehicle_model)"/>
+              <arg name="diffusion_planner_param_path" value="$(var planner_param_path)"/>
+              <arg name="vehicle_info_param_path" value="$(var diffusion_planner_vehicle_info_param_path)"/>
+              <arg name="input_odometry" value="/localization/kinematic_state"/>
+              <arg name="input_acceleration" value="/localization/acceleration"/>
+              <arg name="input_route" value="/planning/mission_planning/route"/>
+              <arg name="input_traffic_signals" value="/perception/traffic_light_recognition/traffic_signals"/>
+              <arg name="input_tracked_objects" value="/perception/object_recognition/tracking/objects"/>
+              <arg name="input_vector_map" value="/map/vector_map"/>
+              <arg name="input_turn_indicators" value="/vehicle/status/turn_indicators_status"/>
+              <arg name="debug/output_traffic_signal" value="/planning/scenario_planning/lane_driving/behavior_planning/debug/traffic_signal"/>
+              <arg name="output_trajectories" value="$(var diffusion_candidate_trajectories_topic)"/>
+            </include>
+          </group>
+          <group if="$(eval &quot;'$(var planner_type)'=='ml_planner'&quot;)">
+            <include file="$(find-pkg-share autoware_ml_planner)/launch/ml_planner.launch.xml">
+              <arg name="vehicle_model" value="$(var vehicle_model)"/>
+              <arg name="ml_planner_param_path" value="$(var planner_param_path)"/>
+              <arg name="vehicle_info_param_path" value="$(var diffusion_planner_vehicle_info_param_path)"/>
+              <arg name="input_odometry" value="/localization/kinematic_state"/>
+              <arg name="input_steering_status" value="/vehicle/status/steering_status"/>
+              <arg name="input_acceleration" value="/localization/acceleration"/>
+              <arg name="input_route" value="/planning/mission_planning/route"/>
+              <arg name="input_traffic_signals" value="/perception/traffic_light_recognition/traffic_signals"/>
+              <arg name="input_tracked_objects" value="/perception/object_recognition/tracking/objects"/>
+              <arg name="input_vector_map" value="/map/vector_map"/>
+              <arg name="input_turn_indicators" value="/vehicle/status/turn_indicators_status"/>
+              <arg name="debug/output_traffic_signal" value="/planning/scenario_planning/lane_driving/behavior_planning/debug/traffic_signal"/>
+              <arg name="output_trajectories" value="$(var diffusion_candidate_trajectories_topic)"/>
+            </include>
+          </group>
         </group>
         <group>
           <include file="$(find-pkg-share autoware_trajectory_processor)/launch/trajectory_processor.launch.xml">
@@ -174,6 +196,7 @@
         <arg name="input_vector_map" value="/map/vector_map"/>
         <arg name="input_odometry" value="/localization/kinematic_state"/>
         <arg name="input_objects" value="$(var input_objects_topic_name)"/>
+        <arg name="input_diffusion_objects" value="/planning/trajectory_generator/neural_network_based_planner/$(var planner_node_name)/output/predicted_objects"/>
         <arg name="input_acceleration" value="/localization/acceleration"/>
         <arg name="input_traffic_signals" value="/perception/traffic_light_recognition/traffic_signals"/>
         <arg name="input_route" value="/planning/mission_planning/route"/>
@@ -219,8 +242,8 @@
     <!-- planning evaluator -->
     <group>
       <include file="$(find-pkg-share autoware_planning_evaluator)/launch/planning_evaluator.launch.xml">
-        <arg name="input/objects" value="/planning/trajectory_generator/neural_network_based_planner/diffusion_planner_node/output/predicted_objects"/>
-        <arg name="input/reference_trajectory" value="/planning/trajectory_generator/neural_network_based_planner/diffusion_planner_node/output/trajectory"/>
+        <arg name="input/objects" value="/planning/trajectory_generator/neural_network_based_planner/$(var planner_node_name)/output/predicted_objects"/>
+        <arg name="input/reference_trajectory" value="/planning/trajectory_generator/neural_network_based_planner/$(var planner_node_name)/output/trajectory"/>
       </include>
     </group>
 

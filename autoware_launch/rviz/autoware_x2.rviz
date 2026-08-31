@@ -3139,6 +3139,30 @@ Visualization Manager:
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Reliable
+                Value: /planning/trajectory_generator/neural_network_based_planner/ml_planner_node/debug/route_marker
+              Value: true
+            - Class: rviz_default_plugins/MarkerArray
+              Enabled: true
+              Name: DiffusionPlannerRoadBoarderMarker
+              Namespaces:
+                {}
+              Topic:
+                Depth: 5
+                Durability Policy: Volatile
+                History Policy: Keep Last
+                Reliability Policy: Reliable
+                Value: /planning/trajectory_generator/neural_network_based_planner/ml_planner_node/debug/linestring_marker
+              Value: true
+            - Class: rviz_default_plugins/MarkerArray
+              Enabled: true
+              Name: DiffusionPlannerRouteMarker
+              Namespaces:
+                {}
+              Topic:
+                Depth: 5
+                Durability Policy: Volatile
+                History Policy: Keep Last
+                Reliability Policy: Reliable
                 Value: /planning/trajectory_generator/neural_network_based_planner/diffusion_planner_node/debug/route_marker
               Value: true
             - Class: rviz_default_plugins/MarkerArray
@@ -3209,7 +3233,7 @@ Visualization Manager:
                 Durability Policy: Volatile
                 History Policy: Keep Last
                 Reliability Policy: Best Effort
-                Value: /planning/trajectory_generator/neural_network_based_planner/diffusion_planner_node/output/predicted_objects
+                Value: /planning/trajectory_generator/neural_network_based_planner/ml_planner_node/output/predicted_objects
               Value: true
               Vector:
                 Twist: false
@@ -3283,7 +3307,7 @@ Visualization Manager:
                     Durability Policy: Volatile
                     History Policy: Keep Last
                     Reliability Policy: Reliable
-                    Value: /planning/planning_factors/diffusion_planner
+                    Value: /planning/planning_factors/ml_planner
                   Value: true
                   show_safety_factors: true
                 - Class: tier4_planning_factor_rviz_plugin/PlanningFactorRvizPlugin
